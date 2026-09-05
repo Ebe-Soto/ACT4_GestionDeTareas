@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -31,14 +33,25 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
+// ---------------------------------------------------------
+// PALETA (misma que ListaEventosScreen, fija, sin modo oscuro)
+// ---------------------------------------------------------
+
+private val Fondo = Color(0xFFF7F1E9)
+private val Cafe = Color(0xFF795238)
+private val CafeOscuro = Color(0xFF352A24)
+private val CafeBorde = Color(0xFFB8A99D)
+private val TextoSecundario = Color(0xFF806F62)
+private val Blanco = Color(0xFFFFFDFC)
+
 // Pantalla de Formulario de Registro o Autenticacion
 @Composable
 fun PantallaRegistro (
     onCrearCuentaClick: (
-            nombre: String,
-            correo: String,
-            contrasena: String
-            ) -> Unit
+        nombre: String,
+        correo: String,
+        contrasena: String
+    ) -> Unit
 ) { // Estado de las variables que conservan el valor mientras la pantalla exista
     var nombre by remember {
         mutableStateOf("")
@@ -63,11 +76,22 @@ fun PantallaRegistro (
     var errorTerminos by remember {
         mutableStateOf<String?>(null) }
 
+    // Colores compartidos por los tres OutlinedTextField de esta pantalla
+    val coloresCampo = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = Cafe,
+        unfocusedBorderColor = CafeBorde,
+        focusedContainerColor = Blanco,
+        unfocusedContainerColor = Blanco,
+        focusedTextColor = CafeOscuro,
+        unfocusedTextColor = CafeOscuro,
+        cursorColor = Cafe
+    )
+
     //Acomodamos el contenido de arriba hacia abajo, uno debajo del otro
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(Fondo)
             .padding(24.dp)
     ) {
         // Creacion del encabezado y nombre de la app
@@ -79,20 +103,20 @@ fun PantallaRegistro (
                 modifier = Modifier
                     .size(40.dp)
                     .background(
-                        MaterialTheme.colorScheme.primary,
+                        Cafe,
                         RoundedCornerShape(10.dp)
                     ),
                 contentAlignment = Alignment.Center
             ) {
                 Text("✦",
-                    color = MaterialTheme.colorScheme.primary)
+                    color = Color.White)
             }
             Spacer(Modifier.width(10.dp)) // Espacio entre el icono y el texto/titulo
             // Titulo
             Text(
                 "Café Lista de Tareas",
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onBackground
+                color = CafeOscuro
             )
         }
 
@@ -103,7 +127,7 @@ fun PantallaRegistro (
             "¡Crea tu cuenta!",
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.onBackground
+            color = CafeOscuro
         )
 
         Spacer(Modifier.height(6.dp))
@@ -112,13 +136,13 @@ fun PantallaRegistro (
         Text(
             "Tus próximos eventos empiezan con un espacio organizado.",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = TextoSecundario
         )
 
         Spacer(Modifier.height(24.dp))
 
         // Creacion de Campo Nombre Completo
-        Text("Nombre completo", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onBackground)
+        Text("Nombre completo", style = MaterialTheme.typography.labelMedium, color = CafeOscuro)
         Spacer(Modifier.height(6.dp))
         OutlinedTextField(
             value = nombre,
@@ -126,13 +150,14 @@ fun PantallaRegistro (
             placeholder = { Text("Tu nombre")}, // Label de ejemplo que se quita al insertar informacion
             singleLine = true,
             shape = RoundedCornerShape(14.dp),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = coloresCampo
         )
 
         Spacer(Modifier.height(18.dp))
 
         // Creacion de Campo Correo Electronico
-        Text("Correo electrónico", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onBackground)
+        Text("Correo electrónico", style = MaterialTheme.typography.labelMedium, color = CafeOscuro)
         Spacer(Modifier.height(6.dp))
         OutlinedTextField(
             value = correo,
@@ -146,19 +171,20 @@ fun PantallaRegistro (
                 Text(errorCorreo ?: "Debe ser un correo @gmail.com")
             },
             shape = RoundedCornerShape(14.dp),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = coloresCampo
         )
         Text(
             "Debe ser un correo@gmail.com",
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = TextoSecundario,
             modifier = Modifier.padding(top = 4.dp)
         )
 
         Spacer(Modifier.height(14.dp))
 
         // Creacion de Campo Contrasena
-        Text("Contraseña", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onBackground)
+        Text("Contraseña", style = MaterialTheme.typography.labelMedium, color = CafeOscuro)
         Spacer(Modifier.height(6.dp))
         OutlinedTextField(
             value = password,
@@ -174,12 +200,13 @@ fun PantallaRegistro (
                 Text(errorContrasena ?: "Mínimo 8 caracteres")
             },
             shape = RoundedCornerShape(14.dp),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = coloresCampo
         )
         Text(
             "8+ caracteres, número y símbolo",
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = TextoSecundario,
             modifier = Modifier.padding(top = 4.dp)
         )
 
@@ -193,12 +220,12 @@ fun PantallaRegistro (
                     aceptarTerminos = it
                     errorTerminos = null
                 },
-                colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.primary)
+                colors = CheckboxDefaults.colors(checkedColor = Cafe)
             )
             Text(
                 "Acepto los términos y condiciones para crear y asignar tareas",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground
+                color = CafeOscuro
             )
         }
         if (errorTerminos != null) {
@@ -229,8 +256,8 @@ fun PantallaRegistro (
             modifier = Modifier.fillMaxWidth().height(56.dp),
             shape = RoundedCornerShape(28.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
+                containerColor = Cafe,
+                contentColor = Color.White
             )
         ) {
             Text("Crear cuenta", fontSize = 16.sp)
@@ -238,7 +265,7 @@ fun PantallaRegistro (
         Text(
             "Al continuar aceptas la Política de privacidad.",
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = TextoSecundario,
             modifier = Modifier.align(Alignment.CenterHorizontally).padding(vertical = 16.dp)
         )
 
@@ -257,4 +284,3 @@ fun esCorreoValido(correo: String): Boolean {
 fun esContrasenaValida(contrasena: String): Boolean {
     return contrasena.length >= 8
 }
-

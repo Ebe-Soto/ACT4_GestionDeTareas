@@ -23,8 +23,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -47,26 +49,59 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
 
-private val Fondo = Color(0xFFF7F1E9)
-private val Cafe = Color(0xFF795238)
-private val CafeOscuro = Color(0xFF352A24)
-private val CafeClaro = Color(0xFFEBDCCB)
-private val TextoSecundario = Color(0xFF806F62)
-private val Blanco = Color(0xFFFFFDFC)
+// ---------------------------------------------------------
+// PALETA DE COLORES (claro / oscuro)
+// ---------------------------------------------------------
+
+data class ColoresEventos(
+    val fondo: Color,
+    val cafe: Color,
+    val cafeOscuro: Color,
+    val cafeClaro: Color,
+    val textoSecundario: Color,
+    val blanco: Color
+)
+
+private val ColoresClaro = ColoresEventos(
+    fondo = Color(0xFFF7F1E9),
+    cafe = Color(0xFF795238),
+    cafeOscuro = Color(0xFF352A24),
+    cafeClaro = Color(0xFFEBDCCB),
+    textoSecundario = Color(0xFF806F62),
+    blanco = Color(0xFFFFFDFC)
+)
+
+private val ColoresOscuro = ColoresEventos(
+    fondo = Color(0xFF1C1512),
+    cafe = Color(0xFFC8996B),
+    cafeOscuro = Color(0xFFF3E9DF),
+    cafeClaro = Color(0xFF3A2E27),
+    textoSecundario = Color(0xFFB8A99D),
+    blanco = Color(0xFF2A2119)
+)
+
+fun coloresEventos(modoOscuro: Boolean): ColoresEventos =
+    if (modoOscuro) ColoresOscuro else ColoresClaro
+
 
 @Composable
 fun ListaEventosScreen(
     eventos: List<Evento>,
+    modoOscuro: Boolean,
+    onCambiarModoOscuro: () -> Unit,
     onAgregarEvento: () -> Unit,
     onEditarEvento: (Evento) -> Unit,
     onEliminarEvento: (Evento) -> Unit
 ) {
+
+    val colores = coloresEventos(modoOscuro)
 
     var textoBusqueda by remember {
         mutableStateOf("")
@@ -81,13 +116,13 @@ fun ListaEventosScreen(
     }
 
     Scaffold(
-        containerColor = Fondo,
+        containerColor = colores.fondo,
 
         floatingActionButton = {
 
             FloatingActionButton(
                 onClick = onAgregarEvento,
-                containerColor = Cafe,
+                containerColor = colores.cafe,
                 contentColor = Color.White
             ) {
 
@@ -128,11 +163,28 @@ fun ListaEventosScreen(
                     fontWeight =
                         FontWeight.Bold,
 
-                    color = CafeOscuro,
+                    color = colores.cafeOscuro,
 
                     modifier =
                         Modifier.weight(1f)
                 )
+
+                // ---- Botón modo oscuro ----
+                IconButton(
+                    onClick = onCambiarModoOscuro
+                ) {
+
+                    Icon(
+                        imageVector = if (modoOscuro)
+                            Icons.Default.LightMode
+                        else
+                            Icons.Default.DarkMode,
+
+                        contentDescription = "Cambiar modo oscuro",
+
+                        tint = colores.cafe
+                    )
+                }
 
                 Icon(
                     imageVector =
@@ -141,7 +193,7 @@ fun ListaEventosScreen(
                     contentDescription =
                         "Perfil",
 
-                    tint = Cafe,
+                    tint = colores.cafe,
 
                     modifier =
                         Modifier.size(38.dp)
@@ -164,7 +216,7 @@ fun ListaEventosScreen(
 
                 fontSize = 14.sp,
 
-                color = TextoSecundario
+                color = colores.textoSecundario
             )
 
 
@@ -176,7 +228,7 @@ fun ListaEventosScreen(
                 fontWeight =
                     FontWeight.Bold,
 
-                color = CafeOscuro,
+                color = colores.cafeOscuro,
 
                 modifier =
                     Modifier.padding(top = 4.dp)
@@ -260,6 +312,8 @@ fun ListaEventosScreen(
 
                         evento = evento,
 
+                        colores = colores,
+
                         onEditar = {
                             onEditarEvento(evento)
                         },
@@ -277,6 +331,7 @@ fun ListaEventosScreen(
 @Composable
 fun EventoCard(
     evento: Evento,
+    colores: ColoresEventos,
     onEditar: () -> Unit,
     onEliminar: () -> Unit
 ) {
@@ -302,6 +357,8 @@ fun EventoCard(
 
             evento = evento,
 
+            colores = colores,
+
             onEditar = onEditar,
 
             onEliminar = {
@@ -317,6 +374,7 @@ fun EventoCard(
 @Composable
 fun SwipeEventoCard(
     evento: Evento,
+    colores: ColoresEventos,
     onEditar: () -> Unit,
     onEliminar: () -> Unit
 ) {
@@ -327,10 +385,13 @@ fun SwipeEventoCard(
 
     val limiteSwipe = -180f
 
+    // Un poco más alta que antes para que quepa la descripción
+    val alturaTarjeta = 84.dp
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(72.dp)
+            .height(alturaTarjeta)
     ) {
 
         // =================================
@@ -343,7 +404,7 @@ fun SwipeEventoCard(
                 .clip(
                     RoundedCornerShape(16.dp)
                 )
-                .background(Cafe),
+                .background(colores.cafe),
 
             contentAlignment =
                 Alignment.CenterEnd
@@ -375,7 +436,7 @@ fun SwipeEventoCard(
 
             modifier = Modifier
                 .fillMaxWidth()
-                .height(72.dp)
+                .height(alturaTarjeta)
 
                 .offset {
                     IntOffset(
@@ -429,7 +490,7 @@ fun SwipeEventoCard(
             colors =
                 CardDefaults.cardColors(
                     containerColor =
-                        Blanco
+                        colores.blanco
                 ),
 
             elevation =
@@ -459,7 +520,7 @@ fun SwipeEventoCard(
 
                     fontSize = 27.sp,
 
-                    color = Cafe,
+                    color = colores.cafe,
 
                     modifier =
                         Modifier.size(38.dp)
@@ -471,7 +532,8 @@ fun SwipeEventoCard(
                 // =================================
 
                 FechaEvento(
-                    fecha = evento.fecha
+                    fecha = evento.fecha,
+                    colores = colores
                 )
 
 
@@ -500,7 +562,7 @@ fun SwipeEventoCard(
                             FontWeight.Bold,
 
                         color =
-                            TextoSecundario,
+                            colores.textoSecundario,
 
                         maxLines = 1
                     )
@@ -516,10 +578,30 @@ fun SwipeEventoCard(
                             FontWeight.Bold,
 
                         color =
-                            CafeOscuro,
+                            colores.cafeOscuro,
 
                         maxLines = 1
                     )
+
+                    // -------- Descripción --------
+                    if (evento.descripcion.isNotBlank()) {
+
+                        Text(
+
+                            text =
+                                evento.descripcion,
+
+                            fontSize = 11.sp,
+
+                            color =
+                                colores.textoSecundario,
+
+                            maxLines = 1,
+
+                            overflow =
+                                TextOverflow.Ellipsis
+                        )
+                    }
                 }
 
 
@@ -540,7 +622,7 @@ fun SwipeEventoCard(
                             "Editar",
 
                         tint =
-                            CafeOscuro
+                            colores.cafeOscuro
                     )
                 }
 
@@ -564,7 +646,7 @@ fun SwipeEventoCard(
                             "Eliminar",
 
                         tint =
-                            Cafe
+                            colores.cafe
                     )
                 }
             }
@@ -574,7 +656,8 @@ fun SwipeEventoCard(
 
 @Composable
 fun FechaEvento(
-    fecha: String
+    fecha: String,
+    colores: ColoresEventos
 ) {
 
     val partes =
@@ -605,7 +688,7 @@ fun FechaEvento(
                     RoundedCornerShape(10.dp)
                 )
                 .background(
-                    CafeClaro
+                    colores.cafeClaro
                 ),
 
         horizontalAlignment =
@@ -624,7 +707,7 @@ fun FechaEvento(
             fontWeight =
                 FontWeight.Bold,
 
-            color = Cafe
+            color = colores.cafe
         )
 
         Text(
@@ -636,7 +719,7 @@ fun FechaEvento(
             fontWeight =
                 FontWeight.Bold,
 
-            color = CafeOscuro
+            color = colores.cafeOscuro
         )
     }
 }
