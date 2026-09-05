@@ -26,7 +26,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.layout.ContentScale
@@ -35,15 +34,18 @@ import androidx.compose.ui.layout.ContentScale
 fun PantallaBienvenida(
     onComenzarClick: () -> Unit
 ) {
+    //Acomodamos el contenido de arriba hacia abajo, uno debajo del otro
     Column (
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .padding(24.dp, 40.dp)
     ) {
+        // Creacion del encabezado y nombre de la app
         Row (
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Icono Visual
             Box (
                 modifier = Modifier
                     .size(40.dp)
@@ -56,24 +58,25 @@ fun PantallaBienvenida(
                 Text("✦",
                     color = MaterialTheme.colorScheme.primary)
             }
-            Spacer(Modifier.width(10.dp))
+            Spacer(Modifier.width(10.dp)) // Espacio entre el icono y el texto/titulo
+            // Titulo
             Text(
                 "Café Lista de Tareas",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
-
+        // Imagen central de la pantalla
         Box(
             modifier = Modifier
                 .size(500.dp)
-                .clip(CircleShape),
+                .clip(CircleShape), // Recorta la imagen en forma de circulo
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(id = R.drawable.circulo),
+                painter = painterResource(id = R.drawable.circulo), // Llamamos al recurso ubicado el drawables
                 contentDescription = null,
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Crop, // Recorta la imagen para llenar el espacio sin deformarse
                 modifier = Modifier
                     .size(400.dp)
                     .fillMaxSize()
@@ -81,8 +84,7 @@ fun PantallaBienvenida(
             )
         }
 
-        //
-
+        // Titulo central
         Text(
             "Organiza cada evento con calma",
             style = MaterialTheme.typography.headlineMedium,
@@ -94,6 +96,7 @@ fun PantallaBienvenida(
 
         Spacer(Modifier.height(12.dp))
 
+        // Subtitulo descriptivo
         Text(
             "Crea tareas, reúne los detalles y llega a tiempo a cada momento importante.",
             style = MaterialTheme.typography.bodyMedium,
@@ -104,6 +107,7 @@ fun PantallaBienvenida(
 
         Spacer((Modifier.height(24.dp)))
 
+        // Diseño de puntos
         Row(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -114,7 +118,8 @@ fun PantallaBienvenida(
 
         Spacer(Modifier.height(24.dp))
 
-        Button(
+        // Boton de Comenzar
+        Button( // Al hacer click, ejecuta la funcion que se le asigno al inicio, esta se define en MainActiviy
             onClick = onComenzarClick,
             modifier = Modifier.fillMaxWidth().height(56.dp),
             shape = RoundedCornerShape(28.dp),

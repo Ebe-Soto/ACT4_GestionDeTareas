@@ -29,9 +29,9 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 
+// Pantalla de Formulario de Registro o Autenticacion
 @Composable
 fun PantallaRegistro (
     onCrearCuentaClick: (
@@ -39,7 +39,7 @@ fun PantallaRegistro (
             correo: String,
             contrasena: String
             ) -> Unit
-) {
+) { // Estado de las variables que conservan el valor mientras la pantalla exista
     var nombre by remember {
         mutableStateOf("")
     }
@@ -63,15 +63,18 @@ fun PantallaRegistro (
     var errorTerminos by remember {
         mutableStateOf<String?>(null) }
 
+    //Acomodamos el contenido de arriba hacia abajo, uno debajo del otro
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .padding(24.dp)
     ) {
+        // Creacion del encabezado y nombre de la app
         Row (
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Icono Visual
             Box (
                 modifier = Modifier
                     .size(40.dp)
@@ -84,7 +87,8 @@ fun PantallaRegistro (
                 Text("✦",
                     color = MaterialTheme.colorScheme.primary)
             }
-            Spacer(Modifier.width(10.dp))
+            Spacer(Modifier.width(10.dp)) // Espacio entre el icono y el texto/titulo
+            // Titulo
             Text(
                 "Café Lista de Tareas",
                 style = MaterialTheme.typography.titleMedium,
@@ -94,6 +98,7 @@ fun PantallaRegistro (
 
         Spacer(Modifier.height((28.dp)))
 
+        // Titulo de la Pantalla
         Text(
             "¡Crea tu cuenta!",
             fontWeight = FontWeight.Bold,
@@ -103,6 +108,7 @@ fun PantallaRegistro (
 
         Spacer(Modifier.height(6.dp))
 
+        // Subtitulo de la Pantalla
         Text(
             "Tus próximos eventos empiezan con un espacio organizado.",
             style = MaterialTheme.typography.bodyMedium,
@@ -111,12 +117,13 @@ fun PantallaRegistro (
 
         Spacer(Modifier.height(24.dp))
 
+        // Creacion de Campo Nombre Completo
         Text("Nombre completo", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onBackground)
         Spacer(Modifier.height(6.dp))
         OutlinedTextField(
             value = nombre,
             onValueChange = { nombre = it },
-            placeholder = { Text("Tu nombre")},
+            placeholder = { Text("Tu nombre")}, // Label de ejemplo que se quita al insertar informacion
             singleLine = true,
             shape = RoundedCornerShape(14.dp),
             modifier = Modifier.fillMaxWidth()
@@ -124,6 +131,7 @@ fun PantallaRegistro (
 
         Spacer(Modifier.height(18.dp))
 
+        // Creacion de Campo Correo Electronico
         Text("Correo electrónico", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onBackground)
         Spacer(Modifier.height(6.dp))
         OutlinedTextField(
@@ -141,7 +149,7 @@ fun PantallaRegistro (
             modifier = Modifier.fillMaxWidth()
         )
         Text(
-            "Debe ser un correo@tecmilenio.mx",
+            "Debe ser un correo@gmail.com",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 4.dp)
@@ -149,6 +157,7 @@ fun PantallaRegistro (
 
         Spacer(Modifier.height(14.dp))
 
+        // Creacion de Campo Contrasena
         Text("Contraseña", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onBackground)
         Spacer(Modifier.height(6.dp))
         OutlinedTextField(
@@ -176,6 +185,7 @@ fun PantallaRegistro (
 
         Spacer(Modifier.height(18.dp))
 
+        // Creacion checkbox de terminos y condiciones
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = aceptarTerminos,
@@ -202,7 +212,11 @@ fun PantallaRegistro (
 
         Spacer(Modifier.height(24.dp))
 
+        // Boton crear cuenta
         Button(
+            // Al hacer click, el programa ejecuta las validaciones correspondientes
+            // Si es correcto, se guardaran las variables dentro de la funcion definida al inicio
+            // Si no cumplen, se mostrara un mensaje de error
             onClick = {
                 errorCorreo = if (!esCorreoValido(correo)) "Correo inválido, debe ser @gmail.com" else null
                 errorContrasena = if (!esContrasenaValida(password)) "Debe tener al menos 8 caracteres" else null
@@ -233,11 +247,13 @@ fun PantallaRegistro (
 }
 
 
+// Funcion de validacion de correo (estructura)
 fun esCorreoValido(correo: String): Boolean {
     val patronCorreo = Regex("^[A-Za-z0-9._%+-]+@gmail\\.com$")
     return patronCorreo.matches(correo.trim())
 }
 
+// Funcion de validacion de contrasena (longitud minima)
 fun esContrasenaValida(contrasena: String): Boolean {
     return contrasena.length >= 8
 }
