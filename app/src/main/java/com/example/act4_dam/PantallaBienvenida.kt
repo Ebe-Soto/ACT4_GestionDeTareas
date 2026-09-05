@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +31,15 @@ import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.layout.ContentScale
 
+// ---------------------------------------------------------
+// PALETA (misma que ListaEventosScreen, fija, sin modo oscuro)
+// ---------------------------------------------------------
+
+private val Fondo = Color(0xFFF7F1E9)
+private val Cafe = Color(0xFF795238)
+private val CafeOscuro = Color(0xFF352A24)
+private val TextoSecundario = Color(0xFF806F62)
+
 @Composable
 fun PantallaBienvenida(
     onComenzarClick: () -> Unit
@@ -38,7 +48,7 @@ fun PantallaBienvenida(
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(Fondo)
             .padding(24.dp, 40.dp)
     ) {
         // Creacion del encabezado y nombre de la app
@@ -50,20 +60,20 @@ fun PantallaBienvenida(
                 modifier = Modifier
                     .size(40.dp)
                     .background(
-                        MaterialTheme.colorScheme.primary,
+                        Cafe,
                         RoundedCornerShape(10.dp)
                     ),
                 contentAlignment = Alignment.Center
             ) {
                 Text("✦",
-                    color = MaterialTheme.colorScheme.primary)
+                    color = Color.White)
             }
             Spacer(Modifier.width(10.dp)) // Espacio entre el icono y el texto/titulo
             // Titulo
             Text(
                 "Café Lista de Tareas",
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onBackground
+                color = CafeOscuro
             )
         }
         // Imagen central de la pantalla
@@ -88,7 +98,7 @@ fun PantallaBienvenida(
         Text(
             "Organiza cada evento con calma",
             style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onBackground,
+            color = CafeOscuro,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
@@ -100,7 +110,7 @@ fun PantallaBienvenida(
         Text(
             "Crea tareas, reúne los detalles y llega a tiempo a cada momento importante.",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = TextoSecundario,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
@@ -112,7 +122,7 @@ fun PantallaBienvenida(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Box(Modifier.size(20.dp, 6.dp).background(MaterialTheme.colorScheme.primary,
+            Box(Modifier.size(20.dp, 6.dp).background(Cafe,
                 RoundedCornerShape(3.dp)))
         }
 
@@ -124,8 +134,8 @@ fun PantallaBienvenida(
             modifier = Modifier.fillMaxWidth().height(56.dp),
             shape = RoundedCornerShape(28.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
+                containerColor = Cafe,
+                contentColor = Color.White
             )
         ) {
             Text("Comenzar", fontSize = 16.sp)
