@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -16,22 +18,63 @@ class MainActivity : ComponentActivity() {
         setContent {
             ACT4_DAMTheme {
                 val navController = rememberNavController()
+                val eventos = remember { mutableStateListOf<Evento>() }
 
                 NavHost(navController = navController,startDestination = "Bienvenida") {
                     composable("Bienvenida") {
                         PantallaBienvenida(
-                            onComenzarClick = { navController.navigate("Registrarse")},
+                            onComenzarClick = { navController.navigate("Registrarse") },
                         )
                     }
 
                     composable("Registrarse") {
                         PantallaRegistro(
-                            onCrearCuentaClick = {  nombre, correo, contrasena ->
+                            onCrearCuentaClick = { nombre, correo, contrasena -> navController.navigate("ListaEventos")
                             }
                         )
                     }
 
+                    composable(
+                        "ListaEventos"
+                    ) {
 
+                        ListaEventosScreen(
+
+                            eventos = eventos,
+
+
+                            // -------------------------
+                            // AGREGAR
+                            // -------------------------
+
+                            onAgregarEvento = {
+
+                                // POR AHORA VACÍO.
+
+                            },
+
+
+                            // -------------------------
+                            // EDITAR
+                            // -------------------------
+
+                            onEditarEvento = { evento ->
+
+                                // POR AHORA VACÍO.
+
+                            },
+
+
+                            // -------------------------
+                            // ELIMINAR
+                            // -------------------------
+
+                            onEliminarEvento = { evento ->
+
+                                eventos.remove(evento)
+                                }
+                        )
+                    }
                 }
             }
         }

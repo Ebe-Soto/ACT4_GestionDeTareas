@@ -29,6 +29,7 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 
 @Composable
