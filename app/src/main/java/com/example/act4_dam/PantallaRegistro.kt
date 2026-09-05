@@ -56,6 +56,13 @@ fun PantallaRegistro (
         mutableStateOf(false)
     }
 
+    var errorCorreo by remember {
+        mutableStateOf<String?>(null) }
+    var errorContrasena by remember {
+        mutableStateOf<String?>(null) }
+    var errorTerminos by remember {
+        mutableStateOf<String?>(null) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -121,8 +128,15 @@ fun PantallaRegistro (
         Spacer(Modifier.height(6.dp))
         OutlinedTextField(
             value = correo,
-            onValueChange = { correo = it },
-            placeholder = { Text("nombre@tecmilenio.mx") },
+            onValueChange = {
+                correo = it
+                errorCorreo = null
+            },
+            placeholder = { Text("nombre@gmail.com") },
+            isError = errorCorreo != null,
+            supportingText = {
+                Text(errorCorreo ?: "Debe ser un correo @gmail.com")
+            },
             shape = RoundedCornerShape(14.dp),
             modifier = Modifier.fillMaxWidth()
         )
@@ -139,10 +153,17 @@ fun PantallaRegistro (
         Spacer(Modifier.height(6.dp))
         OutlinedTextField(
             value = password,
-            onValueChange = { password = it },
+            onValueChange = {
+                password = it
+                errorContrasena = null
+            },
             placeholder = { Text("••••••••") },
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
+            isError = errorContrasena != null,
+            supportingText = {
+                Text(errorContrasena ?: "Mínimo 8 caracteres")
+            },
             shape = RoundedCornerShape(14.dp),
             modifier = Modifier.fillMaxWidth()
         )
@@ -158,7 +179,10 @@ fun PantallaRegistro (
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = aceptarTerminos,
-                onCheckedChange = { aceptarTerminos = it },
+                onCheckedChange = {
+                    aceptarTerminos = it
+                    errorTerminos = null
+                },
                 colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.primary)
             )
             Text(
@@ -167,11 +191,27 @@ fun PantallaRegistro (
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
+        if (errorTerminos != null) {
+            Text(
+                errorTerminos!!,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(start = 4.dp)
+            )
+        }
 
         Spacer(Modifier.height(24.dp))
 
         Button(
-            onClick = { onCrearCuentaClick(nombre, correo, password) },
+            onClick = {
+                errorCorreo = if (!esCorreoValido(correo)) "Correo inválido, debe ser @gmail.com" else null
+                errorContrasena = if (!esContrasenaValida(password)) "Debe tener al menos 8 caracteres" else null
+                errorTerminos = if (!aceptarTerminos) "Debes aceptar los términos y condiciones" else null
+
+                if (errorCorreo == null && errorContrasena == null && errorTerminos == null) {
+                    onCrearCuentaClick(nombre, correo, password)
+                }
+            },
             modifier = Modifier.fillMaxWidth().height(56.dp),
             shape = RoundedCornerShape(28.dp),
             colors = ButtonDefaults.buttonColors(
@@ -181,7 +221,6 @@ fun PantallaRegistro (
         ) {
             Text("Crear cuenta", fontSize = 16.sp)
         }
-
         Text(
             "Al continuar aceptas la Política de privacidad.",
             style = MaterialTheme.typography.bodySmall,
@@ -192,3 +231,14 @@ fun PantallaRegistro (
     }
 
 }
+
+
+fun esCorreoValido(correo: String): Boolean {
+    val patronCorreo = Regex("^[A-Za-z0-9._%+-]+@gmail\\.com$")
+    return patronCorreo.matches(correo.trim())
+}
+
+fun esContrasenaValida(contrasena: String): Boolean {
+    return contrasena.length >= 8
+}
+
